@@ -44,7 +44,7 @@ Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->middlew
 
 Route::get('/tt', function () {
 
-    return 'it 1 ta baje';
+    return 'it 1 ta baje ';
 
 })->name('tt');
 
