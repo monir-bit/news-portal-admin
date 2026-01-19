@@ -1,0 +1,12 @@
+[22-Nov-2022 12:25:49 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Support\ServiceProvider" not found in /home/bnbd24/public_html/bangla-admin/app/Providers/BroadcastServiceProvider.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/bnbd24/public_html/bangla-admin/app/Providers/BroadcastServiceProvider.php on line 8
+[19-Aug-2024 01:41:28 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Foundation\Support\Providers\AuthServiceProvider" not found in /home/breakingnewsbd/public_html/bangla-admin/app/Providers/AuthServiceProvider.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/app/Providers/AuthServiceProvider.php on line 8
+[19-Aug-2024 04:45:19 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Support\ServiceProvider" not found in /home/breakingnewsbd/public_html/bangla-admin/app/Providers/BroadcastServiceProvider.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/app/Providers/BroadcastServiceProvider.php on line 8

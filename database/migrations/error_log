@@ -1,0 +1,52 @@
+[14-Aug-2024 22:01:01 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_08_28_124636_create_galleries_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_08_28_124636_create_galleries_table.php on line 7
+[15-Aug-2024 12:58:47 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2021_09_06_171488_create_districts_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2021_09_06_171488_create_districts_table.php on line 7
+[16-Aug-2024 19:21:12 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_20_183558_create_images_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_20_183558_create_images_table.php on line 7
+[16-Aug-2024 20:11:34 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_24_193114_create_latests_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_24_193114_create_latests_table.php on line 7
+[16-Aug-2024 23:23:55 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2014_10_12_000000_create_users_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2014_10_12_000000_create_users_table.php on line 7
+[17-Aug-2024 10:21:57 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_19_103253_create_news_details_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_19_103253_create_news_details_table.php on line 7
+[17-Aug-2024 20:37:25 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_19_135459_create_subcategories_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_19_135459_create_subcategories_table.php on line 7
+[18-Aug-2024 19:25:27 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_17_131235_create_news_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_03_17_131235_create_news_table.php on line 7
+[19-Aug-2024 18:27:07 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_25_173821_create_trending_details_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_25_173821_create_trending_details_table.php on line 7
+[20-Aug-2024 07:21:30 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_13_063112_create_live_news_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_13_063112_create_live_news_table.php on line 7
+[21-Aug-2024 09:14:38 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2021_09_06_171499_create_thanas_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2021_09_06_171499_create_thanas_table.php on line 7
+[21-Aug-2024 14:12:01 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_20_195112_create_c_m_s_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_20_195112_create_c_m_s_table.php on line 7
+[26-Aug-2024 05:08:13 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Database\Migrations\Migration" not found in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_11_103708_create_division_wes_table.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/breakingnewsbd/public_html/bangla-admin/database/migrations/2022_04_11_103708_create_division_wes_table.php on line 7
