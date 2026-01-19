@@ -42,7 +42,11 @@ Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->middlew
 
 //})->middleware(['auth'])->name('dashboard');
 
+Route::get('/tt', function () {
 
+    return 'it 1 ta baje';
+
+})->name('tt');
 
 Route::get('access-denied', [\App\Http\Controllers\HomeController::class, 'accessDenied'])->name('access-denied');
 
