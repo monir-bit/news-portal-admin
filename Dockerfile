@@ -1,7 +1,7 @@
 FROM php:8.1-apache
 
 # ===============================
-# System + PHP Extensions (GD SAFE)
+# System + PHP Extensions
 # ===============================
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install \
         pdo_mysql \
+        pdo_pgsql \
         mbstring \
         exif \
         pcntl \
@@ -27,19 +28,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ===============================
-# Apache Config (Cloud Run)
+# Apache module
 # ===============================
 RUN a2enmod rewrite
-RUN echo "Listen 8080" > /etc/apache2/ports.conf
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-RUN echo '<VirtualHost *:8080>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 # ===============================
 # Workdir
@@ -47,7 +38,7 @@ RUN echo '<VirtualHost *:8080>\n\
 WORKDIR /var/www/html
 
 # ===============================
-# Composer (cache optimized)
+# Composer
 # ===============================
 COPY composer.json composer.lock ./
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -65,7 +56,7 @@ RUN composer install \
 COPY . .
 
 # ===============================
-# Laravel Required Directories
+# Laravel directories
 # ===============================
 RUN mkdir -p \
     storage/framework/sessions \
@@ -76,18 +67,29 @@ RUN mkdir -p \
     bootstrap/cache
 
 # ===============================
-# Permissions (CRITICAL)
+# Permissions
 # ===============================
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache
 
 # ===============================
-# Storage Symlink
+# Storage link
 # ===============================
 RUN php artisan storage:link || true
 
 # ===============================
 # Cloud Run
 # ===============================
+ENV PORT=8080
 EXPOSE 8080
-CMD ["apache2-foreground"]
+
+CMD bash -c '\
+echo "Listen ${PORT}" > /etc/apache2/ports.conf && \
+echo "<VirtualHost *:${PORT}>" > /etc/apache2/sites-available/000-default.conf && \
+echo "  DocumentRoot /var/www/html/public" >> /etc/apache2/sites-available/000-default.conf && \
+echo "  <Directory /var/www/html/public>" >> /etc/apache2/sites-available/000-default.conf && \
+echo "    AllowOverride All" >> /etc/apache2/sites-available/000-default.conf && \
+echo "    Require all granted" >> /etc/apache2/sites-available/000-default.conf && \
+echo "  </Directory>" >> /etc/apache2/sites-available/000-default.conf && \
+echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf && \
+apache2-foreground'
