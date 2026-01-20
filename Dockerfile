@@ -3,15 +3,18 @@ FROM php:8.1-apache
 # ১. প্রয়োজনীয় টুলস এবং এক্সটেনশন ইন্সটল (একবারই ক্যাশ হবে)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libwebp-dev \
     libonig-dev \
     libxml2-dev \
     zip \
     unzip \
     libpq-dev \
     curl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-install gd
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ২. Apache কনফিগারেশন এবং পোর্ট সেটআপ
 RUN a2enmod rewrite
