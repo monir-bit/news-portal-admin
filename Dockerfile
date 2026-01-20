@@ -49,5 +49,24 @@ RUN composer dump-autoload --optimize
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+
+RUN mkdir -p /var/www/html/storage/framework/sessions \
+    && mkdir -p /var/www/html/storage/framework/views \
+    && mkdir -p /var/www/html/storage/framework/cache \
+    && mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/bootstrap/cache \
+    && mkdir -p /var/www/html/public/images
+
+# ২. সব ফোল্ডারের মালিকানা www-data (ওয়েব সার্ভার ইউজার) কে দেওয়া
+RUN chown -R www-data:www-data /var/www/html/storage \
+    && chown -R www-data:www-data /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html/public/images
+
+# ৩. ফোল্ডারগুলোতে রাইট পারমিশন (775) দেওয়া
+RUN chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/public/images
+
+
 # ৯. পোর্ট এক্সপোজ
 EXPOSE 8080
