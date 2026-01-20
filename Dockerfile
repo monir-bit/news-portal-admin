@@ -28,9 +28,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ===============================
-# Apache module
+# Apache Configuration (CRITICAL FIX)
 # ===============================
 RUN a2enmod rewrite
+
+# 1. Change Apache port from 80 to 8080 (Required for Cloud Run)
+# 2. Change DocumentRoot to /var/www/html/public (Required for Laravel)
+RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf \
+    && sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 # ===============================
 # Workdir
@@ -64,17 +69,22 @@ RUN mkdir -p \
     storage/framework/cache \
     storage/logs \
     storage/app/public \
+    public/images \
     bootstrap/cache
 
 # ===============================
-# Permissions
+# Permissions (Includes previous fix)
 # ===============================
+# We fix permissions for storage AND the public/images folder
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 777 storage bootstrap/cache public/images
 
 # ===============================
 # Storage link
 # ===============================
 RUN php artisan storage:link || true
 
+# ===============================
+# Start
+# ===============================
 EXPOSE 8080
