@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     curl \
     && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-install gd
 
 # ২. Apache কনফিগারেশন এবং পোর্ট সেটআপ
 RUN a2enmod rewrite
