@@ -30,3 +30,4 @@ yarn-error.log
 public/.user.ini
 composer.lock
 pnpm-lock.yaml
+package-lock.json
