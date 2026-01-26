@@ -28,3 +28,5 @@ yarn-error.log
 /.zed
 /public/.user.ini
 public/.user.ini
+composer.lock
+pnpm-lock.yaml
