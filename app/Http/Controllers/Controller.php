@@ -2,12 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-
-class Controller extends BaseController
+abstract class Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    public function redirectBackWithSuccess($message)
+    {
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function redirectBackWithError($message){
+        return redirect()->back()->with('error', $message);
+    }
+
+    public function redirectRouteWithSuccess($route, $message)
+    {
+        return redirect()->route($route)->with('success', $message);
+    }
+
+    public function redirectRouteWithError($route, $message){
+        return redirect()->route($route)->with('error', $message);
+    }
+
+
 }

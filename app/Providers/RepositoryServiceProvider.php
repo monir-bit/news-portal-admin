@@ -2,29 +2,25 @@
 
 namespace App\Providers;
 
-use App\Http\Helper\Helper;
-use App\Http\Repositories\HelperRepositoryInterface;
+use App\Applications\Helpers\MediaHelper;
+use App\Repositories\MediaHelperRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
 
     /**
      * Bootstrap services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app->bind(HelperRepositoryInterface::class,Helper::class);
+        $this->app->bind(MediaHelperRepositoryInterface::class, MediaHelper::class);
     }
 }

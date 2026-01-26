@@ -1,500 +1,72 @@
 <?php
 
-
-
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LatestNewsController;
+use App\Http\Controllers\LiveNewsController;
+use App\Http\Controllers\MarqueNewsController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsTimelineController;
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Laravel\Fortify\Features;
+
+Route::get('/', function () {
+    return Inertia::render('welcome', [
+        'canRegister' => Features::enabled(Features::registration()),
+    ]);
+})->name('home');
 
 
-
-/*
-
-|--------------------------------------------------------------------------
-
-| Web Routes
-
-|--------------------------------------------------------------------------
-
-|
-
-| Here is where you can register web routes for your application. These
-
-| routes are loaded by the RouteServiceProvider within a group which
-
-| contains the "web" middleware group. Now create something great!
-
-|
-
-*/
-
-
-
-
-
-
-
-Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->middleware('auth');
-
-
-
-//Route::get('/dashboard', function () {
-
-//    return view('dashboard');
-
-//})->middleware(['auth'])->name('dashboard');
-
-Route::get('/tt', function () {
-
-    return 'it 1 ta baje   d';
-
-})->name('tt');
-
-Route::get('access-denied', [\App\Http\Controllers\HomeController::class, 'accessDenied'])->name('access-denied');
-
-
-
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
-
-    Route::get('/', [\App\Http\Controllers\HomeController::class, 'index']);
-
-    Route::get('/news-position',function(){
-
-
-        return view('admin.news-system.index');
-
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::prefix('category')->name('category.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
     });
 
-    Route::group(['prefix' => 'news'], function () {
-
-           Route::get('index', [\App\Http\Controllers\NewsController::class, 'index']);
-
-        Route::get('most-readed', [\App\Http\Controllers\NewsController::class, 'MostRead']);
-
-        Route::get('create', [\App\Http\Controllers\NewsController::class, 'create']);
-
-        Route::post('store', [\App\Http\Controllers\NewsController::class, 'store']);
-
-        Route::post('update', [\App\Http\Controllers\NewsController::class, 'update']);
-        Route::get('publishadd/{newsId}/{type}', [\App\Http\Controllers\NewsController::class, 'publishadd']);
-
-        Route::get('publish/{newsId}', [\App\Http\Controllers\NewsController::class, 'publish'])->middleware('publisher');
-
-        Route::get('proofreader/{newsId}', [\App\Http\Controllers\NewsController::class, 'proofreader'])->middleware('publisher');
-
-        Route::get('list/proofreader', [\App\Http\Controllers\NewsController::class, 'listProofreader']);
-
-        Route::get('proofreader/submit/{newsId}', [\App\Http\Controllers\NewsController::class, 'submitProofreader']);
-
-        Route::get('get-district/{divisionID}', [\App\Http\Controllers\NewsController::class, 'getDistrictByDivId']);
-
-        Route::get('get-upozilla/{districtID}', [\App\Http\Controllers\NewsController::class, 'getUpozillaByDisId']);
-
-        Route::get('live-news/list', [\App\Http\Controllers\NewsController::class, 'getListLiveNews']);
-
-        Route::get('live-index/{newsId}', [\App\Http\Controllers\NewsController::class, 'liveNews']);
-
-        Route::post('live-index/store', [\App\Http\Controllers\NewsController::class, 'liveNewsStore']);
-
-        Route::get('live-news/edit/{newsId}', [\App\Http\Controllers\NewsController::class, 'liveNewsEdit']);
-
-        Route::get('live-news/delete/{newsId}', [\App\Http\Controllers\NewsController::class, 'liveNewsDelete'])->name('live.news.delete');
-
-        Route::post('live-news/update', [\App\Http\Controllers\NewsController::class, 'liveNewsUpdate']);
-
-
-
-
-
-        /**
-
-         * order news
-
-         */
-
-        Route::get('order-news', [\App\Http\Controllers\NewsController::class, 'orderNews']);
-
-        Route::post('order-news-store', [\App\Http\Controllers\NewsController::class, 'orderNewsStore']);
-
-        Route::post('orderUpdate', [\App\Http\Controllers\NewsController::class, 'orderUpdate']);
-
-
-
-        Route::get('create-by-category/{categoryId}/{categoryName}', [\App\Http\Controllers\NewsController::class, 'createByCategory']);
-
-        Route::get('index-by-category/{categoryId}', [\App\Http\Controllers\NewsController::class, 'getList']);
-
-        Route::delete('delete/{newsId}/', [\App\Http\Controllers\NewsController::class, 'delete']);
-
-        Route::get('edit/{newsId}/{categoryName?}', [\App\Http\Controllers\NewsController::class, 'edit']);
-
-        Route::get('view/{newsId}/', [\App\Http\Controllers\NewsController::class, 'view']);
-
-        Route::get('keyword-by-id/{newsId}/', [\App\Http\Controllers\NewsController::class, 'getKeyWord']);
-
-        Route::get('get-keyword', [\App\Http\Controllers\Keyword::class, 'getKeyword']);
-
-
-
-        Route::group(['prefix' => 'category', 'middleware' => 'developer'], function () {
-
-            Route::get('index', [\App\Http\Controllers\Category::class, 'index']);
-
-            Route::post('create', [\App\Http\Controllers\Category::class, 'create']);
-
-            Route::get('list', [\App\Http\Controllers\Category::class, 'list']);
-
-            Route::get('view/{id}', [\App\Http\Controllers\Category::class, 'view']);
-
-            Route::get('edit/{id}', [\App\Http\Controllers\Category::class, 'edit']);
-
-            Route::post('update', [\App\Http\Controllers\Category::class, 'update']);
-
-            Route::get('delete/{id}', [\App\Http\Controllers\Category::class, 'delete']);
-
-            Route::get('visible/{id}', [\App\Http\Controllers\Category::class, 'visible']);
-
-            Route::get('invisible/{id}', [\App\Http\Controllers\Category::class, 'invisible']);
-
-        });
-
-        Route::group(['prefix' => 'breaking', 'middleware' => 'developer'], function () {
-            Route::get('index', [\App\Http\Controllers\Breaking::class, 'index']);
-            Route::post('create', [\App\Http\Controllers\Breaking::class, 'create']);
-            Route::get('edit/{id}', [\App\Http\Controllers\Breaking::class, 'edit']);
-            Route::post('update', [\App\Http\Controllers\Breaking::class, 'update']);
-            Route::get('delete/{id}', [\App\Http\Controllers\Breaking::class, 'delete']);
-            Route::get('list', [\App\Http\Controllers\Breaking::class, 'list']);
-            Route::get('visible/{id}', [\App\Http\Controllers\Breaking::class, 'visible']);
-            Route::get('invisible/{id}', [\App\Http\Controllers\Breaking::class, 'invisible']);
-        });
-
-
-        Route::group(['prefix' => 'subcategory', 'middleware' => 'developer'], function () {
-
-            Route::get('index', [\App\Http\Controllers\Subcategory::class, 'index']);
-
-            Route::post('create', [\App\Http\Controllers\Subcategory::class, 'create']);
-
-            Route::get('list', [\App\Http\Controllers\Subcategory::class, 'list']);
-
-            Route::get('view/{id}', [\App\Http\Controllers\Subcategory::class, 'view']);
-
-            Route::get('edit/{id}', [\App\Http\Controllers\Subcategory::class, 'edit']);
-
-            Route::post('update', [\App\Http\Controllers\Subcategory::class, 'update']);
-
-            Route::get('delete/{id}', [\App\Http\Controllers\Subcategory::class, 'delete']);
-
-            Route::get('get-sub-category/{categoryId}', [\App\Http\Controllers\Subcategory::class, 'getSubCategory']);
-
-            Route::post('get-sub-category-post/', [\App\Http\Controllers\Subcategory::class, 'getSubCategoryByJson']);
-
-            Route::get('visible/{id}', [\App\Http\Controllers\Subcategory::class, 'visible']);
-
-            Route::get('invisible/{id}', [\App\Http\Controllers\Subcategory::class, 'invisible']);
-
-        });
-
-
-
-        Route::group(['prefix' => 'keyword', 'middleware' => 'developer'], function () {
-
-            Route::get('index', [\App\Http\Controllers\Keyword::class, 'index']);
-
-            Route::get('index-trending', [\App\Http\Controllers\Keyword::class, 'indexTrending']);
-
-            Route::post('create', [\App\Http\Controllers\Keyword::class, 'create']);
-
-            Route::get('list', [\App\Http\Controllers\Keyword::class, 'list']);
-
-            Route::get('view/{id}', [\App\Http\Controllers\Keyword::class, 'view']);
-
-            Route::get('edit/{id}', [\App\Http\Controllers\Keyword::class, 'edit']);
-
-            Route::post('update', [\App\Http\Controllers\Keyword::class, 'update']);
-
-            Route::get('delete/{id}', [\App\Http\Controllers\Keyword::class, 'delete']);
-
-            Route::get('make-trending/{id}', [\App\Http\Controllers\Keyword::class, 'makeTrending']);
-
-            Route::get('remove-trending/{id}', [\App\Http\Controllers\Keyword::class, 'removeTrending']);
-
-            Route::get('details-trending/{id}', [\App\Http\Controllers\Keyword::class, 'detailsTrending']);
-
-            Route::post('trending-details-store', [\App\Http\Controllers\Keyword::class, 'detailsStoreTrending']);
-
-        });
-
-
-
-        Route::group(['prefix' => 'video', 'middleware' => 'developer'], function () {
-
-            Route::get('index', [\App\Http\Controllers\VideoController::class, 'index']);
-
-            Route::post('create', [\App\Http\Controllers\VideoController::class, 'create']);
-
-            Route::get('list', [\App\Http\Controllers\VideoController::class, 'list']);
-
-            Route::get('view/{id}', [\App\Http\Controllers\VideoController::class, 'view']);
-
-            Route::get('edit/{id}', [\App\Http\Controllers\VideoController::class, 'edit']);
-
-            Route::post('update', [\App\Http\Controllers\VideoController::class, 'update']);
-
-            Route::get('delete/{id}', [\App\Http\Controllers\VideoController::class, 'delete']);
-
-        });
-
-
-
-
-
-        Route::group(['prefix' => 'image', 'middleware' => 'developer'], function () {
-
-            Route::get('index', [\App\Http\Controllers\ImageController::class, 'index']);
-
-            Route::post('create', [\App\Http\Controllers\ImageController::class, 'create']);
-
-            Route::get('list', [\App\Http\Controllers\ImageController::class, 'list']);
-
-            Route::get('view/{id}', [\App\Http\Controllers\ImageController::class, 'view']);
-
-            Route::get('edit/{id}', [\App\Http\Controllers\ImageController::class, 'edit']);
-
-            Route::post('update', [\App\Http\Controllers\ImageController::class, 'update']);
-
-            Route::get('delete/{id}', [\App\Http\Controllers\ImageController::class, 'delete']);
-
-        });
-
+    Route::prefix('tag')->name('tag.')->group(function () {
+        Route::get('/', [TagController::class, 'index'])->name('index');
+        Route::post('/store', [TagController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [TagController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [TagController::class, 'delete'])->name('delete');
     });
 
-    Route::group(['prefix' => 'vote', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\VoteController::class, 'index']);
-
-        Route::get('create', [\App\Http\Controllers\VoteController::class, 'create']);
-
-        Route::post('store', [\App\Http\Controllers\VoteController::class, 'store']);
-
-        Route::get('list', [\App\Http\Controllers\VoteController::class, 'list']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\VoteController::class, 'edit']);
-
-        Route::get('activate/{id}', [\App\Http\Controllers\VoteController::class, 'activate']);
-
-        Route::get('deactivate/{id}', [\App\Http\Controllers\VoteController::class, 'deactivate']);
-
-        Route::post('update', [\App\Http\Controllers\VoteController::class, 'update']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\VoteController::class, 'delete']);
-
+    Route::prefix('news')->name('news.')->group(function () {
+        Route::get('/', [NewsController::class, 'index'])->name('index');
+        Route::get('/create', [NewsController::class, 'create'])->name('create');
+        Route::post('/store', [NewsController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [NewsController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [NewsController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [NewsController::class, 'delete'])->name('delete');
     });
 
-    Route::group(['prefix' => 'opinion', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\OpinionController::class, 'index']);
-
-        Route::post('create', [\App\Http\Controllers\OpinionController::class, 'create']);
-
-        Route::get('list', [\App\Http\Controllers\OpinionController::class, 'list']);
-
-        Route::get('view/{id}', [\App\Http\Controllers\OpinionController::class, 'view']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\OpinionController::class, 'edit']);
-
-        Route::post('update', [\App\Http\Controllers\OpinionController::class, 'update']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\OpinionController::class, 'delete']);
-
+    Route::prefix('latest-news')->name('latest-news.')->group(function () {
+        Route::get('/', [LatestNewsController::class, 'index'])->name('index');
+        Route::delete('/delete/{id}', [LatestNewsController::class, 'delete'])->name('delete');
     });
 
-    Route::group(['prefix' => 'seo', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\SeoController::class, 'index']);
-
-        Route::get('create', [\App\Http\Controllers\SeoController::class, 'create']);
-
-        Route::post('store', [\App\Http\Controllers\SeoController::class, 'store']);
-
-        Route::get('view/{id}', [\App\Http\Controllers\SeoController::class, 'view']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\SeoController::class, 'edit']);
-
-        Route::post('update', [\App\Http\Controllers\SeoController::class, 'update']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\SeoController::class, 'delete']);
-
+    Route::prefix('marque-news')->name('marque-news.')->group(function () {
+        Route::get('/', [MarqueNewsController::class, 'index'])->name('index');
+        Route::delete('/delete/{id}', [MarqueNewsController::class, 'delete'])->name('delete');
     });
 
-
-
-    Route::group(['prefix' => 'information', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\InformationController::class, 'index']);
-
-        Route::get('edit', [\App\Http\Controllers\InformationController::class, 'edit']);
-
-        Route::post('store', [\App\Http\Controllers\InformationController::class, 'update']);
-
+    Route::prefix('live-news')->name('live-news.')->group(function () {
+        Route::get('/', [LiveNewsController::class, 'index'])->name('index');
+        Route::delete('/delete/{id}', [LiveNewsController::class, 'delete'])->name('delete');
     });
 
-
-
-    Route::group(['prefix' => 'contact', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\ContactController::class, 'index']);
-
-        Route::get('create', [\App\Http\Controllers\ContactController::class, 'create']);
-
-        Route::post('store', [\App\Http\Controllers\ContactController::class, 'store']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\ContactController::class, 'delete']);
-
+    Route::prefix('timeline-news/{news_id}')->name('timeline-news.')->group(function () {
+        Route::get('/', [NewsTimelineController::class, 'index'])->name('index');
+        Route::post('/store', [NewsTimelineController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [NewsTimelineController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [NewsTimelineController::class, 'delete'])->name('delete');
     });
-
-
-
-    Route::group(['prefix' => 'user', 'middleware' => 'admin'], function () {
-
-        Route::get('index', [\App\Http\Controllers\UserController::class, 'index']);
-        Route::get('news/{user}', [\App\Http\Controllers\NewsController::class, 'user_news']);
-        Route::get('create', [\App\Http\Controllers\UserController::class, 'create']);
-
-        Route::post('store', [\App\Http\Controllers\UserController::class, 'store']);
-
-        Route::post('update', [\App\Http\Controllers\UserController::class, 'update'])->middleware('admin');
-
-        Route::get('delete/{id}', [\App\Http\Controllers\UserController::class, 'delete'])->middleware('admin');
-
-        Route::get('edit/{id}', [\App\Http\Controllers\UserController::class, 'edit'])->middleware('admin');
-
-    });
-
-
-
-    Route::get('profile', [\App\Http\Controllers\UserController::class, 'profile']);
-
-    Route::post('profile-update', [\App\Http\Controllers\UserController::class, 'profileUpdate']);
-
-
-
-    Route::group(['prefix' => 'designation', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\DesignationController::class, 'index']);
-
-        Route::post('store', [\App\Http\Controllers\DesignationController::class, 'store']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\DesignationController::class, 'delete']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'timeline', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\TimelineController::class, 'index']);
-
-        Route::post('store', [\App\Http\Controllers\TimelineController::class, 'store']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\TimelineController::class, 'delete']);
-
-        Route::get('news/{id}', [\App\Http\Controllers\TimelineController::class, 'timelineNews']);
-
-        Route::get('news/remove/{id}', [\App\Http\Controllers\TimelineController::class, 'removeNews']);
-
-        Route::get('getTimeline/{id?}', [\App\Http\Controllers\TimelineController::class, 'getTimeline']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'division', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\DivisionController::class, 'index']);
-
-        Route::post('store', [\App\Http\Controllers\DivisionController::class, 'store']);
-
-        Route::post('update', [\App\Http\Controllers\DivisionController::class, 'update']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\DivisionController::class, 'delete']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\DivisionController::class, 'edit']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'weare', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\WeAreController::class, 'index']);
-
-        Route::get('create', [\App\Http\Controllers\WeAreController::class, 'create']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\WeAreController::class, 'edit']);
-
-        Route::post('store', [\App\Http\Controllers\WeAreController::class, 'store']);
-
-        Route::post('update/', [\App\Http\Controllers\WeAreController::class, 'update']);
-
-        Route::get('delete/{id}', [\App\Http\Controllers\WeAreController::class, 'delete']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'cms', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\CMSController::class, 'index']);
-
-        Route::get('view/{id}', [\App\Http\Controllers\CMSController::class, 'view']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\CMSController::class, 'edit']);
-
-        Route::post('update', [\App\Http\Controllers\CMSController::class, 'update']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'advertise', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\AdvertiseController::class, 'index']);
-
-        Route::get('create', [\App\Http\Controllers\AdvertiseController::class, 'create']);
-
-        Route::get('view/{id}', [\App\Http\Controllers\AdvertiseController::class, 'view']);
-
-        Route::get('edit/{id}', [\App\Http\Controllers\AdvertiseController::class, 'edit']);
-         Route::get('delete/{id}', [\App\Http\Controllers\AdvertiseController::class, 'delete']);
-
-        Route::post('store', [\App\Http\Controllers\AdvertiseController::class, 'store']);
-
-        Route::post('update', [\App\Http\Controllers\AdvertiseController::class, 'update']);
-
-        Route::get('active/{id}', [\App\Http\Controllers\AdvertiseController::class, 'makeActive']);
-
-        Route::post('active/{id}', [\App\Http\Controllers\AdvertiseController::class, 'delete']);
-
-    });
-
-
-
-    Route::group(['prefix' => 'gallery', 'middleware' => 'developer'], function () {
-
-        Route::get('index', [\App\Http\Controllers\GalleryController::class, 'index']);
-
-        Route::get('create', [\App\Http\Controllers\GalleryController::class, 'create']);
-
-        Route::post('save', [\App\Http\Controllers\GalleryController::class, 'save']);
-
-    });
-
 });
 
-
-
-URL::forceScheme('https');
-
-
-
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';

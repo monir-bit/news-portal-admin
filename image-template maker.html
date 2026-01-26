@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Predefined Image Template Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background: #fff;
+        }
+        .controls {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Predefined Template Editor</h2>
+
+<canvas id="canvas" width="800" height="500"></canvas>
+
+<div class="controls">
+    <input type="file" id="upload">
+    <br><br>
+    <input type="text" id="textInput" placeholder="Type text here">
+    <button onclick="updateText()">Update Text</button>
+    <br><br>
+    <button onclick="downloadImage()">Download Image</button>
+</div>
+
+<script>
+    // Canvas init
+    const canvas = new fabric.Canvas('canvas', {
+        preserveObjectStacking: true
+    });
+
+    /* ------------------------------------
+       STEP 1: Predefined Template (PNG/SVG)
+    -------------------------------------*/
+    fabric.Image.fromURL('template.png', function (img) {
+        img.scaleToWidth(canvas.width);
+        img.scaleToHeight(canvas.height);
+        img.selectable = false;
+        img.evented = false;
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+    });
+
+    /* ------------------------------------
+       STEP 2: Fixed Image Slot
+    -------------------------------------*/
+    const frame = new fabric.Rect({
+        left: 100,
+        top: 120,
+        width: 200,
+        height: 200,
+        fill: 'transparent',
+        selectable: false,
+        evented: false
+    });
+    canvas.add(frame);
+
+    let userImage = null;
+
+    /* ------------------------------------
+       STEP 3: Image Upload & Replace
+    -------------------------------------*/
+    document.getElementById('upload').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (f) {
+            fabric.Image.fromURL(f.target.result, function (img) {
+
+                if (userImage) {
+                    canvas.remove(userImage);
+                }
+
+                img.set({
+                    left: frame.left,
+                    top: frame.top,
+                    scaleX: frame.width / img.width,
+                    scaleY: frame.height / img.height,
+                    clipPath: new fabric.Rect({
+                        left: frame.left,
+                        top: frame.top,
+                        width: frame.width,
+                        height: frame.height,
+                        absolutePositioned: true
+                    })
+                });
+
+                userImage = img;
+                canvas.add(img);
+                canvas.setActiveObject(img);
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+
+    /* ------------------------------------
+       STEP 4: Zoom In / Zoom Out (Mouse Wheel)
+    -------------------------------------*/
+    canvas.on('mouse:wheel', function (opt) {
+        const obj = canvas.getActiveObject();
+        if (!obj || obj !== userImage) return;
+
+        let zoom = obj.scaleX;
+        zoom *= opt.e.deltaY > 0 ? 0.95 : 1.05;
+        zoom = Math.min(Math.max(zoom, 0.5), 3);
+
+        obj.scale(zoom);
+        canvas.renderAll();
+        opt.e.preventDefault();
+        opt.e.stopPropagation();
+    });
+
+    /* ------------------------------------
+       STEP 5: Keep Image Inside Slot
+    -------------------------------------*/
+    canvas.on('object:moving', function (e) {
+        const obj = e.target;
+        if (obj !== userImage) return;
+
+        const maxLeft = frame.left;
+        const minLeft = frame.left + frame.width - obj.width * obj.scaleX;
+        const maxTop = frame.top;
+        const minTop = frame.top + frame.height - obj.height * obj.scaleY;
+
+        obj.left = Math.min(maxLeft, Math.max(minLeft, obj.left));
+        obj.top = Math.min(maxTop, Math.max(minTop, obj.top));
+    });
+
+    /* ------------------------------------
+       STEP 6: Fixed Text (Editable Only)
+    -------------------------------------*/
+    const fixedText = new fabric.Textbox('Your Text Here', {
+        left: 350,
+        top: 300,
+        width: 300,
+        fontSize: 28,
+        fill: '#000',
+        selectable: false,
+        editable: true
+    });
+    canvas.add(fixedText);
+
+    function updateText() {
+        fixedText.text = document.getElementById('textInput').value;
+        canvas.renderAll();
+    }
+
+    /* ------------------------------------
+       STEP 7: Download Final Image
+    -------------------------------------*/
+    function downloadImage() {
+        canvas.discardActiveObject();
+        canvas.renderAll();
+
+        const dataURL = canvas.toDataURL({
+            format: 'png',
+            quality: 1
+        });
+
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'final-image.png';
+        link.click();
+    }
+</script>
+
+</body>
+</html>

@@ -1,38 +1,23 @@
 <?php return array (
-  'facade/ignition' => 
+  'inertiajs/inertia-laravel' => 
   array (
-    'aliases' => 
-    array (
-      'Flare' => 'Facade\\Ignition\\Facades\\Flare',
-    ),
     'providers' => 
     array (
-      0 => 'Facade\\Ignition\\IgnitionServiceProvider',
+      0 => 'Inertia\\ServiceProvider',
     ),
   ),
-  'fruitcake/laravel-cors' => 
+  'laravel/fortify' => 
   array (
     'providers' => 
     array (
-      0 => 'Fruitcake\\Cors\\CorsServiceProvider',
+      0 => 'Laravel\\Fortify\\FortifyServiceProvider',
     ),
   ),
-  'intervention/image' => 
-  array (
-    'aliases' => 
-    array (
-      'Image' => 'Intervention\\Image\\Facades\\Image',
-    ),
-    'providers' => 
-    array (
-      0 => 'Intervention\\Image\\ImageServiceProvider',
-    ),
-  ),
-  'laravel/breeze' => 
+  'laravel/pail' => 
   array (
     'providers' => 
     array (
-      0 => 'Laravel\\Breeze\\BreezeServiceProvider',
+      0 => 'Laravel\\Pail\\PailServiceProvider',
     ),
   ),
   'laravel/sail' => 
@@ -68,6 +53,27 @@
     'providers' => 
     array (
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    ),
+  ),
+  'nunomaduro/termwind' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    ),
+  ),
+  'pestphp/pest-plugin-laravel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Pest\\Laravel\\PestServiceProvider',
+    ),
+  ),
+  'tightenco/ziggy' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
     ),
   ),
 );

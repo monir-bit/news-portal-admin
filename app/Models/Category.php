@@ -2,64 +2,51 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'name',
         'slug',
-        'order',
+        'position',
         'visible',
+        'parent_id',
     ];
 
-    protected $casts = [
-        'visible' => 'boolean',
-    ];
-
-    public function subCategories()
+    /**
+     * Parent category (belongs to)
+     */
+    public function parent()
     {
-        return $this->hasMany(Subcategory::class);
+        return $this->belongsTo(
+            self::class,
+            'parent_id'
+        );
     }
 
     /**
-     * Generate unique slug from name
+     * Direct children categories
      */
-    public static function generateUniqueSlug($name, $currentId = null)
+    public function children()
     {
-        // Use Laravel's Str::slug for transliteration
-        $slug = Str::slug($name, '-', 'bn');
-        
-        // Fallback: if empty, create a simple slug
-        if (empty($slug)) {
-            $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower($name));
-            $slug = trim($slug, '-');
-        }
-        
-        // If still empty, use hash
-        if (empty($slug)) {
-            $slug = substr(md5($name), 0, 8);
-        }
+        return $this->hasMany(
+            self::class,
+            'parent_id'
+        )->orderBy('position');
+    }
 
-        // Make slug unique
-        $originalSlug = $slug;
-        $counter = 1;
+    /**
+     * Recursive children (tree)
+     */
+    public function childrenRecursive()
+    {
+        return $this->children()
+            ->with('childrenRecursive');
+    }
 
-        while (DB::table('categories')
-            ->where('slug', $slug)
-            ->when($currentId, function ($query) use ($currentId) {
-                return $query->where('id', '!=', $currentId);
-            })
-            ->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-
-        return $slug;
+    public function parentRecursive()
+    {
+        return $this->parent()->with('parentRecursive');
     }
 }
