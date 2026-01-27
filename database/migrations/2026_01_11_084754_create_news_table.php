@@ -19,10 +19,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('ticker')->nullable();
             $table->longText('sort_description');
-            $table->integer('order')->nullable();
             $table->integer('proofreader')->nullable()->default(0);
             $table->string('image')->nullable();
-            $table->string('type');
             $table->boolean('published')->default(0);
             $table->boolean('latest')->default(0);
             $table->boolean('news_marquee')->default(0);

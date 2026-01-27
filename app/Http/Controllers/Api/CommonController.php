@@ -13,15 +13,11 @@ class CommonController extends Controller
 {
     public function __construct(
         protected RecursiveCategoryQuery $recursiveCategoryQuery,
-        protected LayoutSectionWiseNewsQuery $layoutSectionWiseNewsQuery,
     ) {}
 
     public function common()
     {
-
-
-        return $this->layoutSectionWiseNewsQuery->handle('trending-news');
-        return Cache::remember('api:common:v1', 60, function () {
+        return Cache::remember('api:common:v2', 60, function () {
             return [
                 'site_info' => [
                     'name' => 'আগামীর সময়',
@@ -33,4 +29,7 @@ class CommonController extends Controller
             ];
         });
     }
+
+
+
 }

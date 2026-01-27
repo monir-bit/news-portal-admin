@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('news_id')->constrained()->onDelete('cascade');
             $table->longText('details')->nullable();
-            $table->string('representative');
             $table->string('keyword')->nullable();
             $table->text('video_link')->nullable();
             $table->text('google_drive_link')->nullable();

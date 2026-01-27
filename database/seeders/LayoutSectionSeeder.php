@@ -15,25 +15,32 @@ class LayoutSectionSeeder extends Seeder
     {
         $layoutSections = [
             [
-                'name' => 'Trending News',
-                'slug' => 'trending-news',
+                'name' => 'Trending Video News',
+                'slug' => 'trending-video-news',
                 'position' => 1,
                 'is_enable' => true,
-                'max_news' => 3,
+                'max_news' => 4,
             ],
             [
                 'name' => 'Lead News',
                 'slug' => 'lead-news',
                 'position' => 2,
                 'is_enable' => true,
-                'max_news' => 5,
+                'max_news' => 4,
+            ],
+            [
+                'name' => 'Pin News',
+                'slug' => 'pin-news',
+                'position' => 3,
+                'is_enable' => true,
+                'max_news' => 4,
             ],
             [
                 'name' => 'Sub Lead News',
                 'slug' => 'sub-lead-news',
-                'position' => 3,
+                'position' => 4,
                 'is_enable' => true,
-                'max_news' => 9,
+                'max_news' => 12,
             ]
         ];
 
