@@ -16,6 +16,7 @@ class LayoutSectionWiseNewsQuery
 
         $news_list = LayoutSectionNews::with('news.category.parentRecursive')
             ->where('layout_section_id', $layout_section->id)
+            ->orderBy('position', 'ASC')
             ->get()->map(function ($item) {
                 return [
                     'position' => $item->position,

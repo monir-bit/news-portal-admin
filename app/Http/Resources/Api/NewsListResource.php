@@ -22,6 +22,7 @@ class NewsListResource extends JsonResource
             }),
             'title' => $this->title,
             'ticker' => $this->ticker,
+            'image' => $this->image,
             'shoulder' => $this->shoulder,
             'sort_description' => $this->sort_description,
             'live_news' => $this->live_news,
