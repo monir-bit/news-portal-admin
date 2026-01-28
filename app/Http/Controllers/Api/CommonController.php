@@ -17,7 +17,7 @@ class CommonController extends Controller
 
     public function common()
     {
-        return Cache::remember('api:common:v2', 60, function () {
+//        return Cache::remember('api:common:v2', 60, function () {
             return [
                 'site_info' => [
                     'name' => 'আগামীর সময়',
@@ -27,7 +27,7 @@ class CommonController extends Controller
                     $this->recursiveCategoryQuery->handle()
                 ),
             ];
-        });
+//        });
     }
 
 
