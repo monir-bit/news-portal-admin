@@ -31,39 +31,54 @@ class LayoutSectionService
 
     public function updateSectionLayoutNews(int $newsId, string $section_layout_id, int $position, bool $isPinned = false) {
         return DB::transaction(function () use ($newsId, $section_layout_id, $position, $isPinned) {
+            try {
 
-            $layoutSection = LayoutSection::where('id', $section_layout_id)
-                ->where('is_enable', true)
-                ->first();
+                LayoutSectionNews::where('news_id', $newsId)->delete();
+                $layoutSection = LayoutSection::where('id', $section_layout_id)
+                    ->where('is_enable', true)
+                    ->first();
 
-            if (!$layoutSection) {
-                return false;
+                if (!$layoutSection) {
+                    return false;
+                }
+
+
+                if ($isPinned) {
+                    return LayoutSectionNews::updateOrCreate(
+                        [
+                            'layout_section_id' => $layoutSection->id,
+                            'position' => $position,
+                        ],
+                        [
+                            'news_id' => $newsId,
+                        ]
+                    );
+                }
+                else{
+                    // 🔁 shift others (>= target position)
+                    LayoutSectionNews::where('layout_section_id', $layoutSection->id)
+                        ->where('position', '>=', $position)
+                        ->increment('position');
+
+                    // 🔁 insert or update current news
+                    $sectionLayoutNews = LayoutSectionNews::updateOrCreate(
+                        [
+                            'layout_section_id' => $layoutSection->id,
+                            'position' => $position,
+                        ],
+                        [
+                            'news_id' => $newsId,
+                        ]
+                    );
+
+
+
+                    return $sectionLayoutNews;
+                }
             }
-
-            // 🔁 shift others (>= target position)
-            LayoutSectionNews::where('layout_section_id', $layoutSection->id)
-                ->where('position', '>=', $position)
-                ->when(!$isPinned, function ($q) {
-                    // normal update → everyone shifts
-                    return $q;
-                }, function ($q) {
-                    // pinned → only existing ones shift (same logic, but explicit)
-                    return $q;
-                })
-                ->increment('position');
-
-            // 🔁 insert or update current news
-            $sectionLayoutNews = LayoutSectionNews::updateOrCreate(
-                [
-                    'layout_section_id' => $layoutSection->id,
-                    'news_id' => $newsId,
-                ],
-                [
-                    'position' => $position,
-                ]
-            );
-
-            return $sectionLayoutNews;
+            catch (\Exception $e) {
+                throw new \Exception("Unable to update section layout news.");
+            }
         });
     }
 

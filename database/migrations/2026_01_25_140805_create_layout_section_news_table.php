@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('news_id')->unsigned();
             $table->integer('position')->default(1);
             $table->timestamps();
-            $table->unique(['layout_section_id', 'news_id']);
+            $table->unique(['layout_section_id', 'position']);
             $table->foreign('layout_section_id')->references('id')->on('layout_sections')->onDelete('cascade');
             $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
         });

@@ -45,8 +45,8 @@ class NewsController extends Controller
     public function store(NewsStoreRequest $request, LayoutSectionService $layoutSectionService)
     {
         $data = collect($request->validated());
-        $newsData = $data->except(['details', 'representative', 'tags', 'category_ids'])->toArray();
-        $newsDetailsData = $data->only(['details', 'representative'])->toArray();
+        $newsData = $data->except(['details', 'tags', 'category_id'])->toArray();
+        $newsDetailsData = $data->only(['details'])->toArray();
         $newsTagData = collect($request->tags)->map(fn ($tag) => ['name' => $tag])->toArray();
 
         DB::beginTransaction();
@@ -81,7 +81,7 @@ class NewsController extends Controller
         $tags = Tag::pluck('name');
         $sectionLayouts = $layoutSectionService->getAllSectionLayouts();
         $sectionLayoutNews = $news->sectionLayoutNews;
-        $activeSectionLayout = $sectionLayouts->where('id', $sectionLayoutNews->layout_section_id)->first();
+        $activeSectionLayout = $sectionLayouts->where('id', $sectionLayoutNews?->layout_section_id)->first();
         return Inertia::render('news/edit', compact(
             'news',
             'categories',

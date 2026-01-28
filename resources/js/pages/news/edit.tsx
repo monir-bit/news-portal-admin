@@ -52,7 +52,7 @@ export default function EditNews({ categories, news, tags, newsTags, sectionLayo
         details: news?.details?.details ?? '',
         tags: newsTags ?? ([] as string[]),
         category_id: news.category_id || null,
-        section_layout_id: sectionLayoutNews?.id ?? '',
+        section_layout_id: activeSectionLayout?.id ?? '',
         section_layout_news_position: sectionLayoutNews?.position ?? 0,
         is_pinned: false,
     });

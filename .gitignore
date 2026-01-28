@@ -31,4 +31,4 @@ public/.user.ini
 composer.lock
 pnpm-lock.yaml
 package-lock.json
-/storage/logs/laravel.log
+storage/logs/laravel.log
