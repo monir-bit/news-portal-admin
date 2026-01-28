@@ -16,6 +16,9 @@ class LayoutSectionWiseNewsQuery
 
         $news_list = LayoutSectionNews::with('news.category.parentRecursive')
             ->where('layout_section_id', $layout_section->id)
+            ->whereHas('news', function ($q) {
+                $q->whereNull('deleted_at');
+            })
             ->orderBy('position', 'ASC')
             ->get()->map(function ($item) {
                 return [
@@ -23,7 +26,6 @@ class LayoutSectionWiseNewsQuery
                     'news' => NewsListResource::make($item->news),
                 ];
             });
-
 
 
         return $news_list;
